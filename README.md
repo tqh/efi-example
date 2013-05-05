@@ -7,6 +7,18 @@ This project was created to research the base for an EFI bootloader for the Haik
 
 TODO: Much more info...
 
+
+Background
+----------
+So I've been researching EFI applications a lot for Haiku and I think I've finally made some sense of it. EFI applications use the PE image format and use Microsoft register calling conventions which means it is a pain in the ass to build from non Microsoft OS'es. Thankfully GNU-EFI provides a way to easily build EFI applications, but it is a bit complicated for our needs.
+
+We don't need the complexity as we don't care about different platforms and compilers or extra functionality that GNU-EFI provides.
+
+So I've stripped it down to the bare basics: the assembly start function, the relocation function and the EFI headers. Also setup all the specific compile time flags needed for gcc (>=4.7) and the linker script to create the .efi file. This gives us an EFI application that is 4.7KB, prints a message and waits for a key before exiting.
+
+And this is that project:
+https://github.com/tqh/efi-example
+
 Files
 -----
 All files except this README.MD, example.c and Makefile come from GNU-EFI: http://sourceforge.net/projects/gnu-efi/  
