@@ -3,6 +3,8 @@ EFI-example
 
 Self-contained minimal example of building an EFI application (under 64 bit Linux atm) without external build dependencies.
 
+This project was created to research the base for an EFI bootloader for the Haiku Operating System, http://www.haiku-os.org/
+
 TODO: Much more info...
 
 Files
