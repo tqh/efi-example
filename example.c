@@ -27,8 +27,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  
-#include <efi.h>
-#include <efilib.h>
+#include "efibind.h"
+#include "efidef.h"
+#include "efidevp.h"
+#include "eficon.h"
+#include "efiapi.h"
+#include "efierr.h"
+
 
 static CHAR16 *exampleText = L"Example EFI Application. Press any key!";
 

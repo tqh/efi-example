@@ -60,7 +60,7 @@
 #define int8_t		efi_int8_t
 
 #include <efi.h>
-#include <efilib.h>
+
 
 EFI_STATUS _relocate (long ldbase, ElfW(Dyn) *dyn, EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 {
