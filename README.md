@@ -21,7 +21,9 @@ https://github.com/tqh/efi-example
 
 Building
 --------
-Make sure you have gcc 4.7.0 or newer.
+Make sure you have gcc 4.7.0 or newer. Hopefully your objcopy will be able to produce efi applications, you might to have a newer binutils if not.
+
+In a terminal:
 
 `make` will produce the efi application *example.efi*.
 
