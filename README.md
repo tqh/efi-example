@@ -22,7 +22,9 @@ https://github.com/tqh/efi-example
 Building
 --------
 Make sure you have gcc 4.7.0 or newer.
+
 `make` will produce the efi application *example.efi*.
+
 `make clean` will remove build objects.
 
 Testing
