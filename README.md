@@ -19,6 +19,15 @@ Therefore I stripped it down to the bare basics: the assembly start function, th
 And this is that project:
 https://github.com/tqh/efi-example
 
+Building
+--------
+Make sure you have gcc 4.7.0 or newer.
+´make´ will produce the efi application ´example.efi´.
+´make clean´ will remove build objects.
+
+Testing
+-------
+
 Files
 -----
 All files except this README.MD, example.c and Makefile come from GNU-EFI: http://sourceforge.net/projects/gnu-efi/  
