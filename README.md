@@ -5,8 +5,6 @@ Self-contained minimal example of building an EFI application (under 64 bit Linu
 
 This project was created to research the base for an EFI bootloader for the Haiku Operating System, http://www.haiku-os.org/
 
-TODO: Much more info...
-
 
 Background
 ----------
@@ -21,16 +19,45 @@ https://github.com/tqh/efi-example
 
 Building
 --------
-Make sure you have gcc 4.7.0 or newer. Hopefully your objcopy will be able to produce efi applications, you might to have a newer binutils if not.
+Make sure you have gcc 4.7.0 or newer. Hopefully your objcopy will be able to produce EFI applications, you probably need to update binutils if not.
 
 In a terminal:
 
-`make` will produce the efi application *example.efi*.
+`make` will produce the EFI application *example.efi*.
 
 `make clean` will remove build objects.
 
-Testing
--------
+Testing in QEMU
+---------------
+You will need to install QEMU and have the Tianocore EFI firmware to test the EFI application.
+
+You can download the x64 firmware from here: http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=OVMF
+
+Follow their guide on how to run: http://sourceforge.net/apps/mediawiki/tianocore/index.php?title=How_to_run_OVMF
+
+You need to do the following for setup:
+
+1. Download OVMF file.
+2. Unpack.
+3. Rename *OVMF.fd* to *bios.bin*.
+4. Rename *CirrusLogic5446.rom* to *vgabios-cirrus.bin*.
+5. Create a *hd* directory that will be used as a FAT harddrive in Qemu.
+
+And this is the actual test procedure:
+
+6. Copy *example.efi* to this directory.
+7. Launch QEMU with `qemu-system-x86_64 -L . -hda fat:hd` where *hd* is the directory acting as harddrive.
+8. QEMU will launch showing the Tianocore logo and will print some text and give you a `shell>`-prompt.
+9. Switch to *fs0* by typing `fs0:`.
+10. You can use `ls` to show the files on *fs0*. `help` is another useful command.
+11. Execute *example.efi* by typing `example.efi`.
+12. The application will run, print the message and wait for a key.
+13. Press a key to exit and return to shell.
+
+Testing or Running on Real Hardware
+------------------------
+TODO
+
 
 Files
 -----
