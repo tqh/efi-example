@@ -58,6 +58,9 @@ Testing or Running on Real Hardware
 ------------------------
 WARNING: I take no absolutly NO responsablitiy for this, make sure you know what you are doing. This is just a quick summary.
 
+At the moment my XUbuntu don't boot if *example.efi* boots before, so DO NOT DO THIS UNLESS YOU KNOW WHAT YOU ARE DOING.
+YOU SHOULD FAMILARIZE YOURSELF WITH HOW TO EDIT AND REMOVE BOOT OPTIONS IN THE FIRMWARE BEFORE EXPEREMENTING WITH THIS!
+
 Usually the UEFI boot partition is mounted at */boot/efi*. It should have a *EFI* sub-directory that contains
 the different EFI applications. These apps probably have their own directories as well:
 ```
