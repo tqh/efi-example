@@ -56,8 +56,58 @@ And this is the actual test procedure:
 
 Testing or Running on Real Hardware
 ------------------------
-TODO
+WARNING: I take no absolutly NO responsablitiy for this, make sure you know what you are doing. This is just a quick summary.
 
+Usually the UEFI boot partition is mounted at */boot/efi*. It should have a *EFI* sub-directory that contains
+the different EFI applications. These apps probably have their own directories as well:
+```
+ls /boot/efi/EFI
+ASUS  Boot  efilinux  haiku  Microsoft  ubuntu
+```
+
+1. Create a directory for our application */boot/efi/EFI/example* will do.
+2. Copy *example.efi* to the */boot/efi/EFI/example* directory.
+3. You need to use, and probably install the *efibootmgr* application that can add and install boot options. You can also add and remove options in your firmware but I will not explain this here.
+All the calls to *efibootmgr* below are done with `sudo`
+4. Running `efibootmgr` will list the boot order and in a cryptic way:
+
+```
+BootCurrent: 0002
+Timeout: 0 seconds
+BootOrder: 0001,0002,0000,0003
+Boot0000* Windows Boot Manager
+Boot0001* Haiku
+Boot0002* ubuntu
+Boot0003* ubuntu
+```
+
+NOTE: Always make sure to note the boot order, so that you can always restore it.
+
+In this example it will try to run 0001 first, and then when that exits or fails go on to boot 0002, which is Ubuntu.
+
+If I wanted to change the bootorder I could execute `efibootmgr --bootorder 0,1,2,3` (these are hex numbers) and it would change to:
+
+```
+BootCurrent: 0002
+Timeout: 0 seconds
+BootOrder: 0000,0001,0002,0003
+Boot0000* Windows Boot Manager
+Boot0001* Haiku
+Boot0002* ubuntu
+Boot0003* ubuntu
+```
+*BootCurrent* is just telling me that at the moment Ubuntu is booted.
+
+To add */boot/efi/EFI/example/example.efi* application you need to add it to the boot order.
+This will only be needed to be done once, after that you can just replace example.efi when you test a newer version.
+
+`efibootmgr -c -L "Example" -l 'EFI\example\example.efi'` creates an new entry *Example* that points to *example.efi*.
+
+It will be added first to the boot order and run when you start. It will print the message, wait for key and exit, which will cause the next boot item to launch.
+
+
+Removing the boot option *Boot0004* can be done with:
+`efibootmgr -B -b 4` where *B* is for *Delete* and *b* points to the bootnumber *Boot0004* 
 
 Files
 -----
