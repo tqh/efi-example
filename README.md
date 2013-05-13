@@ -112,6 +112,10 @@ It will be added first to the boot order and run when you start. It will print t
 Removing the boot option *Boot0004* can be done with:
 `efibootmgr -B -b 4` where *B* is for *Delete* and *b* points to the bootnumber *Boot0004* 
 
+Useful Links
+------------
+http://wiki.phoenix.com/wiki/index.php/Category:UEFI_2.1
+
 Files
 -----
 All files except this README.MD, example.c and Makefile come from GNU-EFI: http://sourceforge.net/projects/gnu-efi/  
