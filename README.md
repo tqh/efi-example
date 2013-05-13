@@ -23,7 +23,10 @@ Make sure you have gcc 4.7.0 or newer. Hopefully your objcopy will be able to pr
 
 In a terminal:
 
-`make` will produce the EFI application *example.efi*.
+`make` will produce the EFI application *example.efi*. 
+
+And also *gfx_example.efi* which is a more advanced example showing how to load the
+gfx protocol and iterating thru the modes.
 
 `make clean` will remove build objects.
 
