@@ -60,15 +60,24 @@ endif
 
 LDFLAGS=-T glue/$(ARCH)/elf_efi.lds -Bsymbolic -shared -nostdlib -znocombreloc 
 
-IMAGE=example.efi
-OBJS = example.o glue/$(ARCH)/relocation_func.o glue/$(ARCH)/start_func.o
+EXAMPLES=example.efi gfx_example.efi
+COMMON = glue/$(ARCH)/relocation_func.o glue/$(ARCH)/start_func.o
 
-all: $(IMAGE)
+
+all: $(EXAMPLES)
+
 
 example.efi: example.so
 
-example.so: $(OBJS)
+example.so: $(COMMON) example.o
 	$(LD) $(LDFLAGS) -o $@ $^ $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 
+
+gfx_example.efi: gfx_example.so
+
+gfx_example.so: $(COMMON) gfx_example.o
+	$(LD) $(LDFLAGS) -o $@ $^ $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
+
+
 clean:
-	rm -f $(IMAGE) *.so $(OBJS)
+	rm -f $(EXAMPLES) *.so $(COMMON) example.o gfx_example.o
