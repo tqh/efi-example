@@ -27,9 +27,15 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+EXAMPLES=example.efi gfx_example.efi disk_example.efi
+COMMON = glue/$(ARCH)/relocation_func.o glue/$(ARCH)/start_func.o
+
 %.efi: %.so
 	objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel \
 		-j .rela -j .reloc -S --target=$(FORMAT) $*.so $@
+
+%.so: %.o
+	$(LD) $(LDFLAGS) -o $@ $^ $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
 
 %.S: %.c
 	$(CC) $(INCDIR) $(CFLAGS) $(CPPFLAGS) -S $< -o $@
@@ -46,7 +52,7 @@ INCDIR := headers
 
 CFLAGS=-I. -I$(INCDIR) -I$(INCDIR)/$(ARCH) \
 		-DGNU_EFI_USE_MS_ABI -fPIC -fshort-wchar -ffreestanding \
-		-maccumulate-outgoing-args \
+		-fno-stack-protector -maccumulate-outgoing-args \
 		-Wall -D$(ARCH) -Werror
 
 ifeq ($(ARCH),ia32)
@@ -60,24 +66,17 @@ endif
 
 LDFLAGS=-T glue/$(ARCH)/elf_efi.lds -Bsymbolic -shared -nostdlib -znocombreloc 
 
-EXAMPLES=example.efi gfx_example.efi
-COMMON = glue/$(ARCH)/relocation_func.o glue/$(ARCH)/start_func.o
-
-
 all: $(EXAMPLES)
 
-
-example.efi: example.so
-
 example.so: $(COMMON) example.o
-	$(LD) $(LDFLAGS) -o $@ $^ $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
-
-
-gfx_example.efi: gfx_example.so
-
 gfx_example.so: $(COMMON) gfx_example.o
-	$(LD) $(LDFLAGS) -o $@ $^ $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
-
+disk_example.so: $(COMMON) disk_example.o
 
 clean:
-	rm -f $(EXAMPLES) *.so $(COMMON) example.o gfx_example.o
+	rm -f $(EXAMPLES) *.so $(COMMON) example.o gfx_example.o disk_example.o
+
+run:
+	cp *.efi hd/
+	qemu-system-x86_64 -enable-kvm -L . -hda fat:hd -hdc hd.image
+
+go: all run
