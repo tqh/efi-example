@@ -635,8 +635,7 @@ EFI_STATUS
 (EFIAPI *EFI_GRAPHICS_OUTPUT_PROTOCOL_SET_MODE) (
   IN  EFI_GRAPHICS_OUTPUT_PROTOCOL *This,
   IN  UINT32                       ModeNumber
-  )
-;
+  );
 
 typedef struct {
   UINT8 Blue;
@@ -732,5 +731,27 @@ struct _EFI_GRAPHICS_OUTPUT_PROTOCOL {
   EFI_GRAPHICS_OUTPUT_PROTOCOL_BLT         Blt;
   EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE        *Mode;
 };
+
+INTERFACE_DECL(_EFI_SERVICE_BINDING);
+
+typedef
+EFI_STATUS
+(EFIAPI *EFI_SERVICE_BINDING_CREATE_CHILD) (
+    IN struct _EFI_SERVICE_BINDING *This,
+    IN EFI_HANDLE                  *ChildHandle
+    );
+
+typedef
+EFI_STATUS
+(EFIAPI *EFI_SERVICE_BINDING_DESTROY_CHILD) (
+    IN struct _EFI_SERVICE_BINDING *This,
+    IN EFI_HANDLE                  ChildHandle
+    );
+
+typedef struct _EFI_SERVICE_BINDING {
+    EFI_SERVICE_BINDING_CREATE_CHILD  CreateChild;
+    EFI_SERVICE_BINDING_DESTROY_CHILD DestroyChild;
+} EFI_SERVICE_BINDING;
+
 #endif
 

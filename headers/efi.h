@@ -46,5 +46,8 @@ Revision History
 #include "efifs.h"
 #include "efierr.h"
 #include "efiui.h"
+#include "efiip.h"
+#include "efiudp.h"
+#include "efitcp.h"
 
 #endif

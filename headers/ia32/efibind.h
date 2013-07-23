@@ -42,14 +42,14 @@ Revision History
         typedef unsigned char       uint8_t;
         typedef char                int8_t;
     #elif defined(__GNUC__)
-        typedef unsigned long long  uint64_t __attribute__((aligned (8)));
-        typedef long long           int64_t __attribute__((aligned (8)));
+        typedef int __attribute__((__mode__(__DI__)))           int64_t;
+        typedef unsigned int __attribute__((__mode__(__DI__)))  uint64_t;
         typedef unsigned int        uint32_t;
         typedef int                 int32_t;
         typedef unsigned short      uint16_t;
         typedef short               int16_t;
         typedef unsigned char       uint8_t;
-        typedef char                int8_t;
+        typedef signed char         int8_t;
     #elif defined(UNIX_LP64)
 
         /*  Use LP64 programming model from C_FLAGS for integer width declarations */
@@ -76,7 +76,7 @@ Revision History
        typedef char                int8_t;
     #endif
 #elif defined(__GNUC__)
-    #include <stdint-gcc.h>
+    #include <stdint.h>
 #endif
 
 //

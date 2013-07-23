@@ -35,6 +35,7 @@ Revision History
 //
 
 #if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L )
+
     // No ANSI C 1999/2000 stdint.h integer width declarations 
 
     #if defined(_MSC_EXTENSIONS)
@@ -50,14 +51,14 @@ Revision History
         typedef unsigned char       uint8_t;
         typedef char                int8_t;
     #elif defined(__GNUC__)
-        typedef unsigned long long  uint64_t __attribute__((aligned (8)));
-        typedef long long           int64_t __attribute__((aligned (8)));
+        typedef int __attribute__((__mode__(__DI__)))           int64_t;
+        typedef unsigned int __attribute__((__mode__(__DI__)))  uint64_t;
         typedef unsigned int        uint32_t;
         typedef int                 int32_t;
         typedef unsigned short      uint16_t;
         typedef short               int16_t;
         typedef unsigned char       uint8_t;
-        typedef char                int8_t;
+        typedef signed char         int8_t;
     #elif defined(UNIX_LP64)
 
         /*  Use LP64 programming model from C_FLAGS for integer width declarations */
@@ -84,7 +85,7 @@ Revision History
        typedef char                int8_t;
     #endif
 #elif defined(__GNUC__)
-    #include <stdint-gcc.h>
+    #include <stdint.h>
 #endif
 
 //
@@ -289,7 +290,86 @@ typedef uint64_t   UINTN;
 #if defined(HAVE_USE_MS_ABI)
 #define uefi_call_wrapper(func, va_num, ...) func(__VA_ARGS__)
 #else
-UINTN uefi_call_wrapper(void *func, unsigned long va_num, ...);
+/*
+  Credits for macro-magic:
+    https://groups.google.com/forum/?fromgroups#!topic/comp.std.c/d-6Mj5Lko_s
+    http://efesx.com/2010/08/31/overloading-macros/
+*/
+#define __VA_NARG__(...)                        \
+  __VA_NARG_(_0, ## __VA_ARGS__, __RSEQ_N())
+#define __VA_NARG_(...)                         \
+  __VA_ARG_N(__VA_ARGS__)
+#define __VA_ARG_N(                             \
+  _0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,N,...) N
+#define __RSEQ_N()                              \
+  10, 9,  8,  7,  6,  5,  4,  3,  2,  1,  0
+
+#define __VA_ARG_NSUFFIX__(prefix,...)                  \
+  __VA_ARG_NSUFFIX_N(prefix, __VA_NARG__(__VA_ARGS__))
+#define __VA_ARG_NSUFFIX_N(prefix,nargs)        \
+  __VA_ARG_NSUFFIX_N_(prefix, nargs)
+#define __VA_ARG_NSUFFIX_N_(prefix,nargs)       \
+  prefix ## nargs
+
+/* Prototypes of EFI cdecl -> stdcall trampolines */
+UINT64 efi_call0(void *func);
+UINT64 efi_call1(void *func, UINT64 arg1);
+UINT64 efi_call2(void *func, UINT64 arg1, UINT64 arg2);
+UINT64 efi_call3(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3);
+UINT64 efi_call4(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+                 UINT64 arg4);
+UINT64 efi_call5(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+                 UINT64 arg4, UINT64 arg5);
+UINT64 efi_call6(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+                 UINT64 arg4, UINT64 arg5, UINT64 arg6);
+UINT64 efi_call7(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+                 UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7);
+UINT64 efi_call8(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+                 UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
+                 UINT64 arg8);
+UINT64 efi_call9(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+                 UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
+                 UINT64 arg8, UINT64 arg9);
+UINT64 efi_call10(void *func, UINT64 arg1, UINT64 arg2, UINT64 arg3,
+                  UINT64 arg4, UINT64 arg5, UINT64 arg6, UINT64 arg7,
+                  UINT64 arg8, UINT64 arg9, UINT64 arg10);
+
+/* Front-ends to efi_callX to avoid compiler warnings */
+#define _cast64_efi_call0(f) \
+  efi_call0(f)
+#define _cast64_efi_call1(f,a1) \
+  efi_call1(f, (UINT64)(a1))
+#define _cast64_efi_call2(f,a1,a2) \
+  efi_call2(f, (UINT64)(a1), (UINT64)(a2))
+#define _cast64_efi_call3(f,a1,a2,a3) \
+  efi_call3(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3))
+#define _cast64_efi_call4(f,a1,a2,a3,a4) \
+  efi_call4(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3), (UINT64)(a4))
+#define _cast64_efi_call5(f,a1,a2,a3,a4,a5) \
+  efi_call5(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3), (UINT64)(a4), \
+            (UINT64)(a5))
+#define _cast64_efi_call6(f,a1,a2,a3,a4,a5,a6) \
+  efi_call6(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3), (UINT64)(a4), \
+            (UINT64)(a5), (UINT64)(a6))
+#define _cast64_efi_call7(f,a1,a2,a3,a4,a5,a6,a7) \
+  efi_call7(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3), (UINT64)(a4), \
+            (UINT64)(a5), (UINT64)(a6), (UINT64)(a7))
+#define _cast64_efi_call8(f,a1,a2,a3,a4,a5,a6,a7,a8) \
+  efi_call8(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3), (UINT64)(a4), \
+            (UINT64)(a5), (UINT64)(a6), (UINT64)(a7), (UINT64)(a8))
+#define _cast64_efi_call9(f,a1,a2,a3,a4,a5,a6,a7,a8,a9) \
+  efi_call9(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3), (UINT64)(a4), \
+            (UINT64)(a5), (UINT64)(a6), (UINT64)(a7), (UINT64)(a8), \
+            (UINT64)(a9))
+#define _cast64_efi_call10(f,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10) \
+  efi_call10(f, (UINT64)(a1), (UINT64)(a2), (UINT64)(a3), (UINT64)(a4), \
+             (UINT64)(a5), (UINT64)(a6), (UINT64)(a7), (UINT64)(a8), \
+             (UINT64)(a9), (UINT64)(a10))
+
+/* main wrapper (va_num ignored) */
+#define uefi_call_wrapper(func,va_num,...)                        \
+  __VA_ARG_NSUFFIX__(_cast64_efi_call, __VA_ARGS__) (func , ##__VA_ARGS__)
+
 #endif
 #define EFI_FUNCTION __attribute__((ms_abi))
 
@@ -298,4 +378,3 @@ UINTN uefi_call_wrapper(void *func, unsigned long va_num, ...);
 #endif
 
 #endif
-
