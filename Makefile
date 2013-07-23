@@ -32,7 +32,7 @@ COMMON = glue/$(ARCH)/relocation_func.o glue/$(ARCH)/start_func.o
 
 %.efi: %.so
 	objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel \
-		-j .rela -j .reloc -S --target=$(FORMAT) $*.so $@
+		-j .rela -j .reloc -S --target=$(FORMAT) $^ $@
 
 %.so: %.o
 	$(LD) $(LDFLAGS) -o $@ $^ $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
