@@ -16,6 +16,8 @@ SECTIONS
   .text :
   {
    *(.text)
+   *(.text.*)
+   *(.gnu.linkonce.t.*)
   }
   . = ALIGN(4096);
   .reloc :

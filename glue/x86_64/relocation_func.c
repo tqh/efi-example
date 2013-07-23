@@ -35,44 +35,21 @@
     SUCH DAMAGE.
 */
 
-#include <elf.h>
-#include <link.h>	/* get _DYNAMIC decl and ElfW and ELFW macros */
-
-
-#undef NULL
-#define uint64_t	efi_uint64_t
-#define int64_t		efi_int64_t
-#define uint32_t	efi_uint32_t
-#define int32_t		efi_int32_t
-#define uint16_t	efi_uint16_t
-#define int16_t		efi_int16_t
-#define uint8_t		efi_uint8_t
-#define int8_t		efi_int8_t
-
-#undef NULL
-#define uint64_t	efi_uint64_t
-#define int64_t		efi_int64_t
-#define uint32_t	efi_uint32_t
-#define int32_t		efi_int32_t
-#define uint16_t	efi_uint16_t
-#define int16_t		efi_int16_t
-#define uint8_t		efi_uint8_t
-#define int8_t		efi_int8_t
-
 #include <efi.h>
 
+#include <elf.h>
 
-EFI_STATUS _relocate (long ldbase, ElfW(Dyn) *dyn, EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+EFI_STATUS _relocate (long ldbase, Elf64_Dyn *dyn, EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
 {
 	long relsz = 0, relent = 0;
-	ElfW(Rel) *rel = 0;
+	Elf64_Rel *rel = 0;
 	unsigned long *addr;
 	int i;
 
 	for (i = 0; dyn[i].d_tag != DT_NULL; ++i) {
 		switch (dyn[i].d_tag) {
 			case DT_RELA:
-				rel = (ElfW(Rel)*)
+				rel = (Elf64_Rel*)
 					((unsigned long)dyn[i].d_un.d_ptr
 					 + ldbase);
 				break;
@@ -111,7 +88,7 @@ EFI_STATUS _relocate (long ldbase, ElfW(Dyn) *dyn, EFI_HANDLE image, EFI_SYSTEM_
 			default:
 				break;
 		}
-		rel = (ElfW(Rel)*) ((char *) rel + relent);
+		rel = (Elf64_Rel*) ((char *) rel + relent);
 		relsz -= relent;
 	}
 	return EFI_SUCCESS;
