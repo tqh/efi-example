@@ -27,6 +27,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+LANG="C"
+
+
 EXAMPLES=example.efi gfx_example.efi disk_example.efi
 COMMON = glue/$(ARCH)/relocation_func.o glue/$(ARCH)/start_func.o
 
@@ -55,6 +58,8 @@ CFLAGS=-I. -I$(INCDIR) -I$(INCDIR)/$(ARCH) \
 		-fno-stack-protector -maccumulate-outgoing-args \
 		-Wall -D$(ARCH) -Werror
 
+CPPFLAGS=$(CFLAGS)
+
 ifeq ($(ARCH),ia32)
 	CFLAGS += -m32
 	FORMAT=efi-app-x86-64
@@ -64,7 +69,7 @@ ifeq ($(ARCH),x86_64)
 	FORMAT=efi-app-$(ARCH)
 endif
 
-LDFLAGS=-T glue/$(ARCH)/elf_efi.lds -Bsymbolic -shared -nostdlib -znocombreloc 
+LDFLAGS=-T glue/$(ARCH)/elf_efi.lds -Bsymbolic -shared -nostdlib -znocombreloc
 
 all: $(EXAMPLES)
 
