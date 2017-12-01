@@ -5,6 +5,7 @@ Self-contained minimal example of building an EFI application (under 64 bit Linu
 
 This project was created to research the base for an EFI bootloader for the Haiku Operating System, http://www.haiku-os.org/
 
+For a cool project based on this checkout: https://github.com/ohnx/nyan-load
 
 Background
 ----------
