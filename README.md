@@ -1,5 +1,6 @@
 EFI-example
 ===========
+(Kind of deprecated, take a look at uefi-example)
 
 Self-contained minimal example of building an EFI application (under 64 bit Linux atm) without external build dependencies.
 
