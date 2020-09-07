@@ -10,7 +10,7 @@ For a cool project based on this checkout: https://github.com/ohnx/nyan-load
 
 Background
 ----------
-So I've been researching EFI applications a lot for Haiku and I think I've finally made some sense of it. EFI applications use the PE image format and use Microsoft register calling conventions which means it is a pain in the ass to build from non Microsoft OS'es. Thankfully GNU-EFI provides a way to easily build EFI applications, but it is a bit complicated for our needs.
+So I've been researching EFI applications a lot for Haiku and I think I've finally made some sense of it. EFI applications use the PE image format and use Microsoft register calling conventions which means it is painful to build from non Microsoft OS'es. Thankfully GNU-EFI provides a way to easily build EFI applications, but it is a bit complicated for our needs.
 
 We don't need the complexity as we don't care about different platforms and compilers or extra functionality that GNU-EFI provides.
 
